@@ -36,6 +36,17 @@ module GReader
       @url     = options['htmlUrl']
       @sortid  = options['sortid']
       @id      = options['id']
+      @tags_   = options['categories']
+    end
+
+    def tags
+      @tags ||= begin
+        @tags_.map { |tag| @client.tag[tag['id']] }
+      end
+    end
+
+    def to_param
+      @id
     end
 
     def <=>(other)

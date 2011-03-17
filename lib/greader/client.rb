@@ -26,6 +26,7 @@ module GReader
 
     attr_reader :sid
     attr_reader :auth
+    attr_reader :email
 
     def initialize(options={})
       authenticate options  if options[:email]
@@ -34,6 +35,8 @@ module GReader
     # Authenticates to the Google Reader service.
     # @return [true] on success
     def authenticate(options={})
+      @email = options[:email]
+
       response = RestClient.post AUTH_URL,
         'service'  => 'reader',
         'continue' => 'http://www.google.com/',
@@ -48,7 +51,7 @@ module GReader
       @auth = m ? m[1] : nil
 
       true
-    rescue RestClient::Unauthorized
+    rescue RestClient::Forbidden
       false
     end
 
@@ -69,15 +72,25 @@ module GReader
     def feeds
       @feeds ||= begin
         list = json_get('subscription/list')['subscriptions']
-        list.map { |item| Feed.new self, item }.sort
+        list.inject({}) { |h, item| h[item['id']] = Feed.new self, item; h }
       end
+      @feeds.values.sort
+    end
+
+    def feed
+      feeds && @feeds
     end
 
     def tags
       @tags ||= begin
         list = json_get('tag/list')['tags']
-        list.map { |item| Tag.new self, item }.sort
+        list.inject({}) { |h, item| h[item['id']] = Tag.new self, item; h }
       end
+      @tags.values.sort
+    end
+
+    def tag
+      tags && @tags
     end
 
     def unread_count
@@ -116,5 +129,11 @@ module GReader
 
       RestClient.send via, url, options
     end
+
+    def inspect
+      "#<#{self.class.name}#{email ? ' '+email.inspect : '' }>"
+    end
+
+  protected
   end
 end

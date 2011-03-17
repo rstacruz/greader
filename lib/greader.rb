@@ -13,8 +13,11 @@ require 'nokogiri'
 #   # Client (GReader::Client)
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
-#   @client.feed('feed_id')      # n/i
-#   @client.tag('tag_id')        # n/i
+#   @client.feed[FEED_ID]
+#   @client.tag[TAG_ID]
+#
+#   # Tag
+#   @client.tag[TAG_ID].feeds    # list of feeds
 #
 #   # Feed (GReader::Feed)
 #   feed = @client.feeds.first
@@ -27,7 +30,7 @@ require 'nokogiri'
 #   entry.summary
 #
 module GReader
-  PREFIX  = File.join('../greader/', __FILE__)
+  PREFIX  = File.expand_path('../greader/', __FILE__)
   VERSION = "0.0.0"
 
   autoload :Client, "#{PREFIX}/client"
