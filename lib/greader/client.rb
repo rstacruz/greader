@@ -72,25 +72,25 @@ module GReader
     def feeds
       @feeds ||= begin
         list = json_get('subscription/list')['subscriptions']
-        list.inject({}) { |h, item| h[item['id']] = Feed.new self, item; h }
+        list.inject({}) { |h, item| feed = Feed.new self, item; h[feed.to_param] = feed; h }
       end
       @feeds.values.sort
     end
 
-    def feed
-      feeds && @feeds
+    def feed(what=nil)
+      feeds && @feeds[what.gsub('/', '_')]
     end
 
     def tags
       @tags ||= begin
         list = json_get('tag/list')['tags']
-        list.inject({}) { |h, item| h[item['id']] = Tag.new self, item; h }
+        list.inject({}) { |h, item| tag = Tag.new self, item; h[tag.to_param] = tag; h }
       end
       @tags.values.sort
     end
 
-    def tag
-      tags && @tags
+    def tag(what=nil)
+      tags && @tags[what.gsub('/', '_')]
     end
 
     def unread_count

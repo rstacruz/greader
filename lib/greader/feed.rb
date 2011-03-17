@@ -41,12 +41,12 @@ module GReader
 
     def tags
       @tags ||= begin
-        @tags_.map { |tag| @client.tag[tag['id']] }
+        @tags_.map { |tag| @client.tag(tag['id']) }
       end
     end
 
     def to_param
-      @id
+      @id.gsub('/', '_')
     end
 
     def <=>(other)
@@ -54,22 +54,28 @@ module GReader
     end
 
     def entries
-      output = @client.get ATOM_URL+id
-      doc    = Nokogiri::XML(output)
+      @entries ||= begin
+        output = @client.get ATOM_URL+id
+        doc    = Nokogiri::XML(output)
 
-      @items = doc.css('feed>entry').map do |entry|
-        Entry.new self,
-          :url       => entry.css('link[rel=alternate]').first['href'],
-          :author    => entry.css('author').first.content,
-          :summary   => entry.css('summary').first.content,
-          :title     => entry.css('title').first.content,
-          :published => Date.parse(entry.css('published').first.content),
-          :updated   => Date.parse(entry.css('updated').first.content)
+        doc.css('feed>entry').map do |entry|
+          Entry.new self,
+            :url       => entry.css('link[rel=alternate]').first['href'],
+            :author    => entry.css('author').first.content,
+            :summary   => entry.css('summary').first.content,
+            :title     => entry.css('title').first.content,
+            :published => Date.parse(entry.css('published').first.content),
+            :updated   => Date.parse(entry.css('updated').first.content)
+        end
       end
     end
 
     def inspect
       "#<#{self.class.name} \"#{title}\" (#{url})>"
+    end
+
+    def expire!
+      @entries = nil
     end
   end
 end

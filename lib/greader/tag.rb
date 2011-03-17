@@ -16,7 +16,7 @@ module GReader
     end
 
     def to_param
-      @id
+      @id.gsub('/', '_')
     end
 
     def <=>(other)

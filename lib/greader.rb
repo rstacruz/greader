@@ -13,11 +13,11 @@ require 'nokogiri'
 #   # Client (GReader::Client)
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
-#   @client.feed[FEED_ID]
-#   @client.tag[TAG_ID]
+#   @client.feed(FEED_ID)
+#   @client.tag(TAG_ID)
 #
 #   # Tag
-#   @client.tag[TAG_ID].feeds    # list of feeds
+#   @client.tag(TAG_ID).feeds    # list of feeds
 #
 #   # Feed (GReader::Feed)
 #   feed = @client.feeds.first
