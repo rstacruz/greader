@@ -53,7 +53,7 @@ module GReader
     # Returns a list of feeds.
     # @return [Feed[]]
     def feeds
-      client.feeds.select { |feed| feed.tags.include?(self) }
+      @client.feeds.select { |feed| feed.tags.include?(self) }
     end
 
     # (see Feed#entries)

@@ -4,21 +4,31 @@ class TagTest < Test::Unit::TestCase
   setup do
     @client = GReader.auth credentials
     @tags   = @client.tags
+    @tag    = @tags[4]
   end
 
-  test "tags" do
+  test "Client#tags" do
     assert_equal 24, @tags.size
-    assert_equal "Dev | Ruby", @tags[4].to_s
   end
 
-  describe "entries" do
+  test "Tag" do
+    assert_equal "Dev | Ruby", @tag.to_s
+  end
+
+  test "Tag#feeds" do
+    @feeds = @tag.feeds
+
+    control = ["pipe :to => /dev/null", "RubyInside.com", "The timeless repository", "Antirez.com"]
+    assert_equal control, @feeds.map(&:to_s)
+  end
+
+  describe "Entries" do
     setup do
-      @tag     = @tags[4]
       @entries = @tag.entries
       @entry   = @entries.first
     end
 
-    test "Entries" do
+    test "is_a Entries" do
       assert @entries.is_a?(GReader::Entries)
     end
 
