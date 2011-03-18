@@ -12,34 +12,38 @@ require 'nokogiri'
 #
 # A {Client} has many {Feed "feeds"} and {Tag "tags"}:
 #
-#   # Client
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
+#
 #   @client.feed('FEED_ID')
 #   @client.tag('TAG_ID')
 #
-# A {Tag} has many feeds:
+# == Common {Feed} usage
+#
+#   @client.feeds.each do |feed|
+#     p feed.id
+#     p feed.title
+#     p feed.url
+#
+#     # A Feed has many entries
+#     feed.entries.each do |entry|
+#       p entry.title
+#       p entry.content
+#     end
+#   end
+#
+# == Common {Tag} usage
+#
+# A {Tag} also has many feeds:
 #
 #   # Tag
-#   @client.tag(TAG_ID).feeds    # list of feeds
-#
-# A {Feed} has many {Entry "Entries"}:
-#
-#   # Feed
-#   feed = @client.feeds.first
-#   feed.id
-#   feed.title
-#   feed.url
-#
-#   # Entry
-#   entry = feed.entries.first
-#   entry.summary
+#   @client.tag('TAG_ID').feeds.each { |feed| }
 #
 # == See
 #
-#  * {Feed}   - A website's feed.
-#  * {Entry}  - An entry in a feed.
-#  * {Tag}    - A feed's tag.
+# * {Feed}   - A website's feed.
+# * {Entry}  - An entry in a feed.
+# * {Tag}    - A feed's tag.
 #
 module GReader
   PREFIX  = File.expand_path('../greader/', __FILE__)

@@ -3,25 +3,33 @@ module GReader
   #
   # == Common usage
   #
-  #   # Getting entries
-  #   entry = feed.entries.first
-  #   assert entry.feed == feed
+  # Getting entries:
+  #
+  #   feed.entries.each do |entry|
+  #     # ...
+  #     assert entry.feed == feed
+  #   end
   #
   #   # Or from tags...
-  #   entry = tag.entries.first
+  #   tag.entries.each { |entry| }
   #
-  #   # Common stuff
-  #   entry.title           #=> "On pride and prejudice"
+  # Common metadata:
+  #
+  #   entry.title           #=> "On pride and prejudice" (or #to_s)
   #   entry.content         #=> "<p>There was a time where..."
   #
-  #   # More metadata
+  # More metadata:
+  #
   #   entry.author          #=> "Rico Sta. Cruz"
   #   entry.updated         #=> #<Date>
   #   entry.published       #=> #<Date>
   #   entry.url             #=> "http://ricostacruz.com/on-pride-and-prejudice.html"
   #
-  #   # Etc
+  # Relationships:
+  #
   #   entry.feed            #=> #<Feed ...>
+  #
+  # States and actions:
   #
   #   # Not implemented yet!
   #   entry.read?           # Read or not?
@@ -40,6 +48,8 @@ module GReader
 
     attr_reader :feed
     attr_reader :client
+
+    alias to_s title
 
     def initialize(feed=Feed.new, options)
       @feed    = feed

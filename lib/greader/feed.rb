@@ -3,16 +3,25 @@ module GReader
   #
   # == Common usage
   #
-  #   feed = client.feed('feed_id_here')
+  # Getting feeds:
   #
-  #   # Metadata
-  #   feed.title        #=> "Rico's blog"
+  #   feed = client.feed('FEED_ID')
+  #
+  # Common metadata:
+  #
+  #   feed.title        #=> "Rico's blog" (or #to_s)
   #   feed.url          #=> "http://ricostacruz.com"
   #   feed.id           #=> "feed/http://ricostacruz.com" (from Google)
   #
-  #   # Collections
+  # Collections:
+  #
   #   feed.entries      #=> [#<Entry>, ...]
   #   feed.tags         #=> [#<Tag>, ...]
+  #
+  # Other ways of getting feeds:
+  #
+  #   client.feeds.each { |feed| }
+  #   client.tag('TAG_ID').feeds.each { |feed| }
   #
   # == Sample output from Google
   #

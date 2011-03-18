@@ -1,4 +1,21 @@
 module GReader
+  # A tag.
+  #
+  # == Common usage
+  #
+  # Getting tags:
+  #
+  #   tag = @client.tag('TAG_ID')
+  #
+  # Metadata:
+  #
+  #   tag.to_s          #=> "Comics"
+  #   tag.id            #=> "user/1000/tag/Comics"
+  #
+  # Collections:
+  #
+  #   tag.feeds         #=> [#<Feed "xkcd">, #<Feed "Dilbert">, ...]
+  #
   class Tag
     attr_reader :id
     attr_reader :sortid
