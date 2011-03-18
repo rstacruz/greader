@@ -36,6 +36,8 @@ module GReader
   #   htmlUrl: http://xkcd.com/
   #
   class Feed
+    include Utilities
+
     attr_reader :url
     attr_reader :title
     attr_reader :sortid
@@ -89,7 +91,7 @@ module GReader
     #   @client.feeds[2].entries order: :asc, start_time: Time.now-86400
     #
     def entries(options={})
-      @entries ||= Entries.fetch @client, Client.atom_url(id)
+      @entries ||= Entries.fetch @client, "stream/contents/#{escape id}"
     end
 
     def inspect

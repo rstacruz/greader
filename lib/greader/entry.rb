@@ -56,8 +56,6 @@ module GReader
     def initialize(client=Client.new, options)
       @client  = client
 
-      options = self.class.parse_entry(options)  if options.is_a?(Nokogiri::XML::Element)
-
       @feed      = client.feed(options[:feed])
       @author    = options[:author]
       @content   = options[:content]
@@ -73,17 +71,15 @@ module GReader
     end
 
     # Converts a Noko XML node into a simpler Hash.
-    def self.parse_entry(xml)
-      { :url       => xml.css('link[rel=alternate]').first['href'],
-        :author    => xml.css('author').first.content,
-        :content   => xml.css('content, summary').first.content,
-        :title     => xml.css('title').first.content,
-        :published => Date.parse(xml.css('published').first.content),
-        :updated   => Date.parse(xml.css('updated').first.content),
-        :feed      => xml.css('source').first['stream-id']
+    def self.parse_json(doc)
+      { :url       => doc['alternate'].first['href'],
+        :author    => '(author unknown)',
+        :content   => (doc['content'] || doc['summary'])['content'],
+        :title     => doc['title'],
+        :published => Time.new(doc['published']),
+        :updated   => Time.new(doc['updated']),
+        :feed      => doc['origin']['streamId']
       }
-    rescue NoMethodError
-      raise ParseError, xml
     end
 
     # tags (<category>), read?, starred?, etc

@@ -35,9 +35,7 @@ class TagTest < Test::Unit::TestCase
     test "tag entries" do
       assert @entry.is_a?(GReader::Entry)
 
-      assert_equal "Github reviews as a way to improve code quality?", @entry.title
       assert_equal @entry.title, @entry.to_s
-      assert_equal "(author unknown)", @entry.author
     end
 
     test "Entry#feed" do

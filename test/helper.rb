@@ -57,7 +57,7 @@ class Test::Unit::TestCase
     fake :post, "https://www.google.com/accounts/ClientLogin", :body => fixture('auth.txt')
     fake :get, "http://www.google.com/reader/api/0/subscription/list?output=json&client=greader.rb-test", :body => fixture('subscription-list.json')
     fake :get, "http://www.google.com/reader/api/0/tag/list?output=json&client=greader.rb-test", :body => fixture('tag-list.json')
-    fake :get, "http://www.google.com/reader/atom/user%2F05185BEEF%2Flabel%2FDev%20%7C%20Ruby?client=greader.rb-test", :body => fixture('ruby-entries.xml')
+    fake :get, "http://www.google.com/reader/api/0/stream/contents/user%2F05185BEEF%2Flabel%2FDev%20%7C%20Ruby?output=json&client=greader.rb-test", :body => fixture('ruby-entries.json')
   end
 end
 

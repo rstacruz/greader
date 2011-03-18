@@ -58,7 +58,7 @@ module GReader
 
     # (see Feed#entries)
     def entries(options={})
-      @entries ||= Entries.fetch @client, Client.atom_url(id)
+      @entries ||= Entries.fetch @client, "stream/contents/#{escape id}"
     end
 
     # Expires the cache.

@@ -33,10 +33,11 @@ module GReader
 
     # Fetch from atom
     def self.fetch(client, url, options={})
-      output = client.get(url, to_params(options))
-      doc    = Nokogiri::XML(output)
+      doc      = client.json_get(url, to_params(options))
+      contents = doc['items'].map do |node|
+        Entry.new client, Entry.parse_json(node)
+      end
 
-      contents, options = parse_xml(doc, client)
       new contents, client, options.merge(:url => url)
     end
 
@@ -66,22 +67,6 @@ module GReader
       params[:ot] = options[:start_time].to_i  if options[:start_time]
       params
     end
-
-    # Converts Google's XML into a an array of Entries + Hash options.
-    # Returns a tuple: the contents array and the options Hash.
-    def self.parse_xml(xml, client)
-      node     = xml.css('continuation').first
-      token    = node ? node.content : nil
-
-      contents = xml.css('feed>entry').map do |node|
-        Entry.new client, node
-      end
-
-      [ contents, { :continuation => token } ]
-    rescue NoMethodError
-      raise ParseError, xml
-    end
-
   end
 end
 
