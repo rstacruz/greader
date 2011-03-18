@@ -5,7 +5,7 @@ module GReader
   #
   # Getting tags:
   #
-  #   tag = @client.tag('TAG_ID')
+  #   tag = @client.tag('TAG_ID')   # see Tag#id below
   #
   # Metadata:
   #
@@ -19,8 +19,16 @@ module GReader
   class Tag
     include Utilities
 
+    # The ID. Also used for {Client#tag}.
+    # @return [string]
     attr_reader :id
+
+    # A sortable field.
+    # @return [string]
     attr_reader :sortid
+
+    # A link to {Client}.
+    # @return [Client]
     attr_reader :client
 
     def initialize(client=Client.new, options)
@@ -42,6 +50,8 @@ module GReader
       sortid <=> other.sortid
     end
 
+    # Returns a list of feeds.
+    # @return [Feed[]]
     def feeds
       client.feeds.select { |feed| feed.tags.include?(self) }
     end
@@ -51,6 +61,8 @@ module GReader
       @entries ||= Entries.fetch @client, Client.atom_url(id)
     end
 
+    # Expires the cache.
+    # @return nil
     def expire!
       @entries = nil
     end

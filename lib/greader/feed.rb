@@ -71,16 +71,16 @@ module GReader
     # List of entries.
     #
     # == Options
-    #   `limit`::       The number of items (default `20`)
-    #   `order`::       The order of items; `:desc` is recent first, `:asc` is
-    #                   earliest first (default `:desc`)
-    #   `start_time`::  The time (`Time` object) from which to start getting
-    #                   items. Only applicable if `order` is `:asc`.
+    # [limit]         The number of items (default +20+)
+    # [order]         The order of items; +:desc+ is recent first, +:asc+ is
+    #                 earliest first (default +:desc+)
+    # [start_time]    The time (+Time+ object) from which to start getting
+    #                 items. Only applicable if +order+ is +:asc+.
     #
     # == Quirks
     # The results are cached. If you want to purge the cache, use {#expire!}.
     #
-    # @return [Entries] Entries.
+    # @return [Entries] The entries it contains.
     #
     # @example
     #
