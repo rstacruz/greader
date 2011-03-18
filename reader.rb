@@ -8,11 +8,17 @@ require 'nokogiri'
 #
 # == Common usage
 #
+# You will first need to authenticate.
+#
 #   @client = GReader.auth email: 'test@sinefunc.com', password: 'password'
+#
+# A client has many feeds and tags.
 #
 #   # Client (GReader::Client)
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
+#
+# A feed has many entries. (See GReader::Feed)
 #
 #   # Feed (GReader::Feed)
 #   feed = @client.feeds.first
@@ -22,7 +28,13 @@ require 'nokogiri'
 #   
 #   # Entry (GReader::Entry)
 #   entry = feed.entries.first
-#   entry.summary
+#   entry.content
+#
+# == See also
+#
+#   * GReader::Entry - A feed's entry.
+#   * GReader::Feed  - A website's feed.
+#   * GReader::Tag   - A feed tag.
 #
 module GReader
   def self.auth(options={})

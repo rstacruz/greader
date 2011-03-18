@@ -1,13 +1,22 @@
 module GReader
-  # A feed.
+  # A feed is a collection of entries.
   #
   # == Common usage
   #
   #   feed = client.feed('feed_id_here')
-  #   feed.title
-  #   feed.entries
+  #
+  #   # Metadata
+  #   feed.title        #=> "Rico's blog"
+  #   feed.url          #=> "http://ricostacruz.com"
+  #   feed.id           #=> "feed/http://ricostacruz.com" (from Google)
+  #
+  #   # Collections
+  #   feed.entries      #=> [#<Entry>, ...]
+  #   feed.tags         #=> [#<Tag>, ...]
   #
   # == Sample output from Google
+  #
+  # This is what Google spits out as JSON.
   #
   #   id: feed/http://xkcd.com/rss.xml
   #   title: xkcd.com
@@ -17,7 +26,7 @@ module GReader
   #   sortid: 6795ABCE
   #   firstitemmsec: "1205294559301"
   #   htmlUrl: http://xkcd.com/
-
+  #
   class Feed
     ATOM_URL   = "http://www.google.com/reader/atom/"
 
@@ -59,13 +68,7 @@ module GReader
         doc    = Nokogiri::XML(output)
 
         doc.css('feed>entry').map do |entry|
-          Entry.new self,
-            :url       => entry.css('link[rel=alternate]').first['href'],
-            :author    => entry.css('author').first.content,
-            :summary   => entry.css('summary').first.content,
-            :title     => entry.css('title').first.content,
-            :published => Date.parse(entry.css('published').first.content),
-            :updated   => Date.parse(entry.css('updated').first.content)
+          Entry.new self, parse_entry(entry)
         end
       end
     end
@@ -76,6 +79,22 @@ module GReader
 
     def expire!
       @entries = nil
+    end
+
+  protected
+    # Returns a hash from an entry XML node.
+    def parse_entry(entry)
+      { :url       => entry.css('link[rel=alternate]').first['href'],
+        :author    => entry.css('author').first.content,
+        :content   => entry.css('content, summary').first.content,
+        :title     => entry.css('title').first.content,
+        :published => Date.parse(entry.css('published').first.content),
+        :updated   => Date.parse(entry.css('updated').first.content)
+      }
+    rescue NoMethodError
+      puts "*"*80
+      puts entry.to_s
+      Hash.new
     end
   end
 end
