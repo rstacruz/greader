@@ -18,6 +18,10 @@ module GReader
   #   feed.entries      #=> [#<Entry>, ...]
   #   feed.tags         #=> [#<Tag>, ...]
   #
+  # Entry lookup:
+  #
+  #   feed.entries['ENTRY_ID']
+  #
   # Other ways of getting feeds:
   #
   #   client.feeds.each { |feed| }
@@ -63,7 +67,7 @@ module GReader
     end
 
     def to_param
-      @id.gsub('/', '_')
+      slug @id
     end
 
     def <=>(other)

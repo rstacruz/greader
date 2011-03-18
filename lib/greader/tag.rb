@@ -43,7 +43,7 @@ module GReader
     end
 
     def to_param
-      @id.gsub('/', '_')
+      slug @id
     end
 
     def <=>(other)

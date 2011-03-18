@@ -14,6 +14,10 @@ module GReader
   #
   #   entries.size  #=> 20
   #
+  # You can also lookup by id:
+  #
+  #   feeds.entries['ENTRY_ID']
+  #
   # But you can have it load more entries:
   #
   #   entries.more
@@ -28,6 +32,8 @@ module GReader
   #   Entries.fetch @client, @client.atom_url(xxx)
   #
   class Entries < Array
+    include Utilities
+
     attr_reader :continuation  # Continuation token (don't use)
     attr_reader :client
 
@@ -56,7 +62,16 @@ module GReader
       #
     end
 
+    # Lookup
+    def [](id)
+      indices[slug(id)]
+    end
+
   protected
+    def indices
+      @indices ||= entries.inject({}) { |h, entry| h[slug(entry.id)] = entry; h }
+    end
+
     # Converts normal options to Google's equivalents.
     # See {Feed#entries}.
     def self.to_params(options={})

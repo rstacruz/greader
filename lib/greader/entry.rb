@@ -5,13 +5,9 @@ module GReader
   #
   # Getting entries:
   #
-  #   feed.entries.each do |entry|
-  #     # ...
-  #     assert entry.feed == feed
-  #   end
-  #
-  #   # Or from tags...
+  #   feed.entries.each { |entry| }
   #   tag.entries.each { |entry| }
+  #   feed.entries['ENTRY_ID']  # See Entry#id below
   #
   # Common metadata:
   #
@@ -24,6 +20,7 @@ module GReader
   #   entry.updated         #=> #<Date>
   #   entry.published       #=> #<Date>
   #   entry.url             #=> "http://ricostacruz.com/on-pride-and-prejudice.html"
+  #   entry.id              #=> "reader_item_128cb290d31352d9"
   #
   # Relationships:
   #
@@ -39,12 +36,15 @@ module GReader
   #   entry.unread!         # Mark as unread
   #
   class Entry
+    include Utilities
+
     attr_reader :content
     attr_reader :author
     attr_reader :title
     attr_reader :published
     attr_reader :updated
     attr_reader :url
+    attr_reader :id
 
     attr_reader :feed
     attr_reader :client
@@ -63,11 +63,16 @@ module GReader
       @published = options[:published]
       @updated   = options[:updated]
       @url       = options[:url]
+      @id        = options[:id]
       @options = options
     end
 
     def inspect
       "#<#{self.class.name} \"#{title}\" (#{url})>"
+    end
+
+    def to_param
+      slug @id
     end
 
     # Converts a Noko XML node into a simpler Hash.
@@ -78,7 +83,8 @@ module GReader
         :title     => doc['title'],
         :published => Time.new(doc['published']),
         :updated   => Time.new(doc['updated']),
-        :feed      => doc['origin']['streamId']
+        :feed      => doc['origin']['streamId'],
+        :id        => doc['id']
       }
     end
 
