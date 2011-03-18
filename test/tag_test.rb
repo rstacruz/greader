@@ -13,11 +13,26 @@ class TagTest < Test::Unit::TestCase
 
   describe "entries" do
     setup do
-      @tag = @tags[4]
+      @tag     = @tags[4]
+      @entries = @tag.entries
+      @entry   = @entries.first
+    end
+
+    test "Entries" do
+      assert @entries.is_a?(GReader::Entries)
     end
 
     test "tag entries" do
-      @entries = @tag.entries
+      assert @entry.is_a?(GReader::Entry)
+
+      assert_equal "Github reviews as a way to improve code quality?", @entry.title
+      assert_equal @entry.title, @entry.to_s
+      assert_equal "(author unknown)", @entry.author
+    end
+
+    test "Entry#feed" do
+      assert @entry.feed.is_a?(GReader::Feed)
+      assert_equal @entry.feed, @client.feed(@entry.feed.id)
     end
   end
 end
