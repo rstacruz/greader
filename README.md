@@ -10,5 +10,5 @@ Please read the {GReader} module documentation.
 * [Documentation][doc]
 * [Google Reader API reference][api]
   
-[doc]: http://rdoc.info/github/rstacruz/greader/master/frames
+[doc]: http://rubydoc.info/github/rstacruz/greader
 [api]: http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
