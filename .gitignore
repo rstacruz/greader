@@ -4,3 +4,4 @@ extra
 /doc
 .yardoc
 /test/fixtures/credentials.yml
+/pkg

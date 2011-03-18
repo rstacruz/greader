@@ -67,7 +67,7 @@ module GReader
     client  if client.logged_in?
   end
 
-  def version
+  def self.version
     VERSION
   end
 
