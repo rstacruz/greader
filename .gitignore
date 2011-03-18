@@ -3,3 +3,4 @@ extra
 .rvmrc
 /doc
 .yardoc
+/test/fixtures/credentials.yml

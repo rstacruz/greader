@@ -1,0 +1,4 @@
+SID=XYZ-a
+LSID=XYZ-b
+Auth=XYZ-c
+
