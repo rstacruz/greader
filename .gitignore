@@ -1,3 +1,5 @@
 test.rb
 extra
 .rvmrc
+/doc
+.yardoc

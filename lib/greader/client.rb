@@ -3,16 +3,25 @@ module GReader
   #
   # == Common usage
   #
-  #   # Always returns a client instance, in contrast to `GReader.auth`
-  #   # which can return nil.
+  # Greader.auth is the preferred way.
+  #
+  #   @client = GReader.auth email: 'test@sinefunc.com', password: 'password'
+  #   @client.nil?  # nil if logging in fails
+  #
+  # You can also use it like so:
+  #
   #   client = Client.new email: 'test@sinefunc.com', password: 'password'
   #   client.logged_in?
   #
+  # See GReader for more common usage of the Client class.
+  #
+  # == Caching and expiration
+  #
   #   # Caching
   #   @client.tags
-  #   @client.tags   # Will be cached
+  #   @client.tags      # Will be retrieved from cache
   #   @client.expire!
-  #   @client.tags   # Will be re-retrieved
+  #   @client.tags      # Will be re-retrieved online
   #
   # == Internal low-level usage
   #
@@ -28,6 +37,12 @@ module GReader
     attr_reader :auth
     attr_reader :email
 
+    # Constructor.
+    #
+    # The constructor can be called without args, but you won't be able to
+    # do anything that requires authentication (which is pretty much 
+    # everything).
+    #
     def initialize(options={})
       authenticate options  if options[:email]
     end

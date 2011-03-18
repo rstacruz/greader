@@ -4,30 +4,42 @@ require 'nokogiri'
 
 # Google Reader API client.
 #
-# http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-#
 # == Common usage
+#
+# First, log in:
 #
 #   @client = GReader.auth email: 'test@sinefunc.com', password: 'password'
 #
-#   # Client (GReader::Client)
+# A {Client} has many {Feed "feeds"} and {Tag "tags"}:
+#
+#   # Client
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
-#   @client.feed(FEED_ID)
-#   @client.tag(TAG_ID)
+#   @client.feed('FEED_ID')
+#   @client.tag('TAG_ID')
+#
+# A {Tag} has many feeds:
 #
 #   # Tag
 #   @client.tag(TAG_ID).feeds    # list of feeds
 #
-#   # Feed (GReader::Feed)
+# A {Feed} has many {Entry "Entries"}:
+#
+#   # Feed
 #   feed = @client.feeds.first
 #   feed.id
 #   feed.title
 #   feed.url
 #
-#   # Entry (GReader::Entry)
+#   # Entry
 #   entry = feed.entries.first
 #   entry.summary
+#
+# == See
+#
+#  * {Feed}   - A website's feed.
+#  * {Entry}  - An entry in a feed.
+#  * {Tag}    - A feed's tag.
 #
 module GReader
   PREFIX  = File.expand_path('../greader/', __FILE__)

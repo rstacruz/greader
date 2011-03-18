@@ -3,7 +3,7 @@
 
 `gem install greader`
 
-Please read the GReader module documentation.
+Please read the {GReader} module documentation.
 
 ### External links
 
