@@ -30,8 +30,11 @@ module GReader
   #   @client.get 'http://foo'              # to arbitrary URL
   #
   class Client
+    include Utilities
+    
     AUTH_URL   = "https://www.google.com/accounts/ClientLogin"
     API_URL    = "http://www.google.com/reader/api/0/"
+    ATOM_URL   = "http://www.google.com/reader/atom/"
 
     attr_reader :sid
     attr_reader :auth
@@ -93,7 +96,7 @@ module GReader
     end
 
     def feed(what=nil)
-      feeds && @feeds[what.gsub('/', '_')]
+      feeds && @feeds[what.to_s.gsub('/', '_')]
     end
 
     def tags
@@ -149,6 +152,15 @@ module GReader
       "#<#{self.class.name}#{email ? ' '+email.inspect : '' }>"
     end
 
-  protected
+    # Retrieves the Google Reader API Atom URL for a certain
+    # resource.
+    #
+    # @example
+    #   Client.atom_url            #=> "http://google.com/rea..."
+    #   Client.atom_url('feed/x')  #=> "http://google.com/rea.../feed/x"
+    #
+    def self.atom_url(url='')
+      "#{ATOM_URL}#{Utilities.escape url}"
+    end
   end
 end

@@ -6,11 +6,13 @@ require 'nokogiri'
 #
 # == Common usage
 #
-# First, log in:
+# First, log in (returns a {Client} or `nil`):
 #
 #   @client = GReader.auth email: 'test@sinefunc.com', password: 'password'
 #
-# A {Client} has many {Feed "feeds"} and {Tag "tags"}:
+# == Common {Client} usage
+#
+# A {Client} has many {Feed Feeds} and {Tag Tags}:
 #
 #   @client.feeds                #=> [#<Feed>, #<Feed>, ...]
 #   @client.tags                 #=> [#<Tag>, #<Tag>, ...]
@@ -39,20 +41,26 @@ require 'nokogiri'
 #   # Tag
 #   @client.tag('TAG_ID').feeds.each { |feed| }
 #
-# == See
+# == Other
 #
-# * {Feed}   - A website's feed.
-# * {Entry}  - An entry in a feed.
-# * {Tag}    - A feed's tag.
+#   GReader.version            #=> "0.0.0"
+#
+# == See also
+#
+# {Feed}::   A website's feed.
+# {Entry}::  An entry in a feed.
+# {Tag}::    A feed's tag.
 #
 module GReader
   PREFIX  = File.expand_path('../greader/', __FILE__)
   VERSION = "0.0.0"
 
-  autoload :Client, "#{PREFIX}/client"
-  autoload :Feed,   "#{PREFIX}/feed"
-  autoload :Entry,  "#{PREFIX}/entry"
-  autoload :Tag,    "#{PREFIX}/tag"
+  autoload :Client,    "#{PREFIX}/client"
+  autoload :Entry,     "#{PREFIX}/entry"
+  autoload :Entries,   "#{PREFIX}/entries"
+  autoload :Feed,      "#{PREFIX}/feed"
+  autoload :Tag,       "#{PREFIX}/tag"
+  autoload :Utilities, "#{PREFIX}/utilities"
 
   def self.auth(options={})
     client = GReader::Client.new options
@@ -62,4 +70,7 @@ module GReader
   def version
     VERSION
   end
+
+  Error      = Class.new(StandardError)
+  ParseError = Class.new(Error)
 end

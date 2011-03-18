@@ -51,10 +51,14 @@ module GReader
 
     alias to_s title
 
-    def initialize(feed=Feed.new, options)
-      @feed    = feed
-      @client  = feed.client
+    # Constructor.
+    # Can be called with an options hash or a Nokogiri XML node.
+    def initialize(client=Client.new, options)
+      @client  = client
 
+      options = self.class.parse_entry(options)  if options.is_a?(Nokogiri::XML::Element)
+
+      @feed      = client.feed(options[:feed])
       @author    = options[:author]
       @content   = options[:content]
       @title     = options[:title]
@@ -67,6 +71,21 @@ module GReader
     def inspect
       "#<#{self.class.name} \"#{title}\" (#{url})>"
     end
+
+    # Converts a Noko XML node into a simpler Hash.
+    def self.parse_entry(xml)
+      { :url       => xml.css('link[rel=alternate]').first['href'],
+        :author    => xml.css('author').first.content,
+        :content   => xml.css('content, summary').first.content,
+        :title     => xml.css('title').first.content,
+        :published => Date.parse(xml.css('published').first.content),
+        :updated   => Date.parse(xml.css('updated').first.content),
+        :feed      => xml.css('source').first['stream-id']
+      }
+    rescue NoMethodError
+      raise ParseError, xml
+    end
+
     # tags (<category>), read?, starred?, etc
     # read! unread!
   end

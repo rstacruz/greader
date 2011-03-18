@@ -23,8 +23,7 @@ module GReader
   #   client.feeds.each { |feed| }
   #   client.tag('TAG_ID').feeds.each { |feed| }
   #
-  # == Sample output from Google
-  #
+  # :stopdoc:
   # This is what Google spits out as JSON.
   #
   #   id: feed/http://xkcd.com/rss.xml
@@ -37,8 +36,6 @@ module GReader
   #   htmlUrl: http://xkcd.com/
   #
   class Feed
-    ATOM_URL   = "http://www.google.com/reader/atom/"
-
     attr_reader :url
     attr_reader :title
     attr_reader :sortid
@@ -71,15 +68,28 @@ module GReader
       sortid <=> other.sortid
     end
 
-    def entries
-      @entries ||= begin
-        output = @client.get ATOM_URL+id
-        doc    = Nokogiri::XML(output)
-
-        doc.css('feed>entry').map do |entry|
-          Entry.new self, parse_entry(entry)
-        end
-      end
+    # List of entries.
+    #
+    # == Options
+    #   `limit`::       The number of items (default `20`)
+    #   `order`::       The order of items; `:desc` is recent first, `:asc` is
+    #                   earliest first (default `:desc`)
+    #   `start_time`::  The time (`Time` object) from which to start getting
+    #                   items. Only applicable if `order` is `:asc`.
+    #
+    # == Quirks
+    # The results are cached. If you want to purge the cache, use {#expire!}.
+    #
+    # @return [Entries] Entries.
+    #
+    # @example
+    #
+    #   @client.feeds[2].entries
+    #   @client.feeds[2].entries limit: 10
+    #   @client.feeds[2].entries order: :asc, start_time: Time.now-86400
+    #
+    def entries(options={})
+      @entries ||= Entries.fetch @client, Client.atom_url(id)
     end
 
     def inspect
@@ -88,22 +98,6 @@ module GReader
 
     def expire!
       @entries = nil
-    end
-
-  protected
-    # Returns a hash from an entry XML node.
-    def parse_entry(entry)
-      { :url       => entry.css('link[rel=alternate]').first['href'],
-        :author    => entry.css('author').first.content,
-        :content   => entry.css('content, summary').first.content,
-        :title     => entry.css('title').first.content,
-        :published => Date.parse(entry.css('published').first.content),
-        :updated   => Date.parse(entry.css('updated').first.content)
-      }
-    rescue NoMethodError
-      puts "*"*80
-      puts entry.to_s
-      Hash.new
     end
   end
 end

@@ -17,6 +17,8 @@ module GReader
   #   tag.feeds         #=> [#<Feed "xkcd">, #<Feed "Dilbert">, ...]
   #
   class Tag
+    include Utilities
+
     attr_reader :id
     attr_reader :sortid
     attr_reader :client
@@ -42,6 +44,15 @@ module GReader
 
     def feeds
       client.feeds.select { |feed| feed.tags.include?(self) }
+    end
+
+    # (see Feed#entries)
+    def entries(options={})
+      @entries ||= Entries.fetch @client, Client.atom_url(id)
+    end
+
+    def expire!
+      @entries = nil
     end
   end
 end
