@@ -4,8 +4,6 @@ require 'nokogiri'
 
 # Google Reader API client.
 #
-# http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
-#
 # == Common usage
 #
 # You will first need to authenticate.
