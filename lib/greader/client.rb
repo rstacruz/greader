@@ -35,7 +35,6 @@ module GReader
     AUTH_URL   = "https://www.google.com/accounts/ClientLogin"
     API_URL    = "http://www.google.com/reader/api/0/"
 
-    attr_reader :sid
     attr_reader :auth
     attr_reader :email
 
@@ -61,9 +60,6 @@ module GReader
         'Passwd'   => options[:password],
         'source'   => client_name
 
-      m = /SID=(.*)/i.match(response.to_s)
-      @sid = m ? m[1] : nil
-
       m = /Auth=(.*)/i.match(response.to_s)
       @auth = m ? m[1] : nil
 
@@ -73,11 +69,11 @@ module GReader
     end
 
     def logged_in?
-      !@sid.nil? and !@auth.nil?
+      !@auth.nil?
     end
 
     def token
-      api_get 'token'
+      @token ||= api_get 'token'
     end
 
     # Expires the cache
@@ -139,10 +135,7 @@ module GReader
     end
 
     def request(via, url, options={})
-      if logged_in?
-        options['Authorization'] = "GoogleLogin auth=#{self.auth}"
-        options['cookies'] = { 'SID' => @sid }
-      end
+      options['Authorization'] = "GoogleLogin auth=#{self.auth}"  if logged_in?
 
       RestClient.send via, url, options
     end
