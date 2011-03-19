@@ -13,6 +13,8 @@ module GReader
   #
   #   entry.title           #=> "On pride and prejudice" (or #to_s)
   #   entry.content         #=> "<p>There was a time where..."
+  #   entry.summary         #=> "There was a time where..." (no HTML)
+  #   entry.image_url       # URL of the first image
   #
   # More metadata:
   #
@@ -73,6 +75,41 @@ module GReader
 
     def to_param
       slug @id
+    end
+
+    # Returns a short summary
+    # @return [string]
+    def summary
+      doc = Nokogiri.HTML(content)
+      # Remove images and empty paragraphs
+      doc.xpath('*//img').each { |tag| tag.remove }
+      doc.xpath('*//*[normalize-space(.)=""]').each { |tag| tag.remove }
+
+      el = (doc.xpath('//body/*') || doc.xpath('//body')).first
+      el.text
+    end
+
+    # Returns the {#content} without HTML tags
+    def bare_content
+      strip_tags(content)
+    end
+
+    # Returns the URL of the first image
+    # @return [string]
+    def image_url
+      url = raw_image_url and begin
+        return nil  if url.include?('feedburner.com') # "Share on Facebook"
+        url
+      end
+    end
+
+    def raw_image_url
+      m = /<img src=['"](.*?)['"]/.match(content)
+      m[1]  if m
+    end
+
+    def image?
+      ! image_url.nil?
     end
 
     # Converts a Noko XML node into a simpler Hash.

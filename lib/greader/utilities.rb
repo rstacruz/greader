@@ -7,7 +7,11 @@ module GReader
     end
 
     def slug(str)
-      str.gsub('/', '_')
+      str.gsub(/[\/\?=&]/, '_')
+    end
+
+    def strip_tags(str)
+      str.gsub(%r{</?[^>]+?>}, '')
     end
   end
 end
