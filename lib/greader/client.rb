@@ -46,6 +46,7 @@ module GReader
     #
     def initialize(options={})
       authenticate options  if options[:email]
+      @oauth_token = options[:access_token]  if options[:access_token]
     end
 
     # Authenticates to the Google Reader service.
@@ -69,7 +70,7 @@ module GReader
     end
 
     def logged_in?
-      !@auth.nil?
+      !@auth.nil? or !@oauth_token.nil?
     end
 
     def token
@@ -110,38 +111,49 @@ module GReader
       json_get 'unread-count', 'all' => 'all'
     end
 
-    def client_name() 'greader.rb/0'; end
+    def client_name() "greader.rb/#{GReader.version}"; end
 
     def get(url, options={})
-      request :get,
-        url, params: options.merge('client' => client_name)
+      request :get, url, params: options.merge('client' => client_name)
     end
 
     def post(url, options={})
-      request :post,
-        url, options.merge('client' => client_name)
+      request :post, url, options.merge('client' => client_name)
     end
 
     def json_get(url, options={})
-      JSON.parse api_get(url, options.merge('output' => 'json'))
+      JSON.parse get(url, options.merge('output' => 'json'))
     end
 
-    def api_get(url, options={})
-      get API_URL+url, options
-    end
+    def request(meth, url, options={})
+      url = API_URL + url
 
-    def api_post(url, options={})
-      post API_URL+url, options
-    end
-
-    def request(via, url, options={})
-      options['Authorization'] = "GoogleLogin auth=#{self.auth}"  if logged_in?
-
-      RestClient.send via, url, options
+      if @auth
+        auth_request meth, url, options
+      elsif @oauth_token
+        oauth_request meth, url, options
+      else
+        raise Error, "Not logged in"
+      end
     end
 
     def inspect
       "#<#{self.class.name}#{email ? ' '+email.inspect : '' }>"
+    end
+
+  protected
+
+    def auth_request(meth, url, options={})
+      options['Authorization'] = "GoogleLogin auth=#{self.auth}"  if logged_in?
+      RestClient.send meth, API_URL + url, options
+    end
+
+    def oauth_request(meth, url, options={})
+      if meth == :get
+        @oauth_token.get url + '?' + kv_map(options[:params])
+      elsif meth == :post
+        @oauth_token.post url, options
+      end.body
     end
   end
 end
