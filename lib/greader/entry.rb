@@ -77,16 +77,24 @@ module GReader
       slug @id
     end
 
+    # Returns a Nokogiri document.
+    def doc
+      @doc ||= Nokogiri.HTML(content)
+    end
+
     # Returns a short summary
     # @return [string]
+    # @return [nil]
     def summary
-      doc = Nokogiri.HTML(content)
+      doc = self.doc.dup
+
       # Remove images and empty paragraphs
       doc.xpath('*//img').each { |tag| tag.remove }
       doc.xpath('*//*[normalize-space(.)=""]').each { |tag| tag.remove }
 
-      el = (doc.xpath('//body/*') || doc.xpath('//body')).first
-      el.text
+      # The first block
+      el = doc.xpath('//body/p | //body/div').first || doc.xpath('//body').first
+      el and el.text
     end
 
     # Returns the {#content} without HTML tags
@@ -96,6 +104,7 @@ module GReader
 
     # Returns the URL of the first image
     # @return [string]
+    # @return [nil]
     def image_url
       url = raw_image_url and begin
         return nil  if url.include?('feedburner.com') # "Share on Facebook"
@@ -104,8 +113,7 @@ module GReader
     end
 
     def raw_image_url
-      m = /<img src=['"](.*?)['"]/.match(content)
-      m[1]  if m
+      img = doc.xpath('*//img').first and img['src']
     end
 
     def image?
