@@ -6,6 +6,7 @@ module GReader
   # Greader.auth is the preferred way.
   #
   #   @client = GReader.auth email: 'test@sinefunc.com', password: 'password'
+  #   @client = GReader.auth email: 'test@sinefunc.com', access_token: <from oauth>
   #   @client.nil?  # nil if logging in fails
   #
   # You can also use it like so:
@@ -45,7 +46,7 @@ module GReader
     # everything).
     #
     def initialize(options={})
-      authenticate options  if options[:email]
+      authenticate options  if options[:password]
       @oauth_token = options[:access_token]  if options[:access_token]
     end
 
