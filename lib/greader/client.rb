@@ -144,11 +144,13 @@ module GReader
 
   protected
 
+    # For those using #auth(email: x, password: x)
     def auth_request(meth, url, options={})
       options['Authorization'] = "GoogleLogin auth=#{self.auth}"  if logged_in?
-      RestClient.send meth, API_URL + url, options
+      RestClient.send meth, url, options
     end
 
+    # For those using #auth(access_token: x)
     def oauth_request(meth, url, options={})
       if meth == :get
         @oauth_token.get url + '?' + kv_map(options[:params])
