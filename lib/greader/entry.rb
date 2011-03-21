@@ -143,7 +143,7 @@ module GReader
         :updated   => Time.new(doc['updated']),
         :feed      => doc['origin']['streamId'],
         :id        => doc['id'],
-        :read      => doc['categories'].any? { |s| s =~ /com\.google\/fresh$/ }
+        :read      => doc['categories'].any? { |s| s =~ /com\.google\/fresh$/ },
         :starred   => doc['categories'].any? { |s| s =~ /com\.google\/starred$/ }
         # Also available: comments [], annotations [], enclosure 
         # [{href,type,length}]
