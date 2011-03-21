@@ -53,7 +53,7 @@ require 'nokogiri'     unless defined?(Nokogiri)
 #
 module GReader
   PREFIX  = File.expand_path('../greader/', __FILE__)
-  VERSION = "0.0.0"
+  VERSION = "0.0.1"
 
   autoload :Client,    "#{PREFIX}/client"
   autoload :Entry,     "#{PREFIX}/entry"
