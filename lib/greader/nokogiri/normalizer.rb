@@ -18,7 +18,8 @@ module Nokogiri
       /feedburner/,
       /^http:\/\/i\.creativecommons\.org/,
       /http:\/\/api\.tweetmeme\.com/,
-      /adview\.php/
+      /(ck|avw|adview)\.php/,
+      /\badvertisement\b/
     ]
     
     # Normalizes HTML by cleaning out common mistakes.
