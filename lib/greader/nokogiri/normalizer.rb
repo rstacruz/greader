@@ -32,7 +32,7 @@ module Nokogiri
     end
 
     def normalize_str(str)
-      normalize(Nokogiri.HTML(str)).xpath('//body').children.to_S
+      normalize(Nokogiri.HTML(str)).xpath('//body').children.to_s
     end
 
     def blocks(html)
