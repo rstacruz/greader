@@ -122,14 +122,19 @@ module GReader
 
     # Converts a Noko XML node into a simpler Hash.
     def self.parse_json(doc)
+      summary = (doc['content'] || doc['summary'])
+      summary = summary['content']  if summary.is_a?(Hash)
+
       { :url       => doc['alternate'].first['href'],
-        :author    => '(author unknown)',
-        :content   => (doc['content'] || doc['summary'])['content'],
+        :author    => doc['author'],
+        :content   => summary,
         :title     => doc['title'],
         :published => DateTime.new(doc['published']),
         :updated   => DateTime.new(doc['updated']),
         :feed      => doc['origin']['streamId'],
         :id        => doc['id']
+        # Also available: comments [], annotations [], enclosure 
+        # [{href,type,length}]
       }
     rescue NoMethodError
       raise ParseError.new("Malformed entries", doc)

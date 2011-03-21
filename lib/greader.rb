@@ -93,6 +93,8 @@ module GReader
   Error      = Class.new(StandardError)
 
   class ParseError < Error
+    attr_reader :node
+
     def initialize(message, node)
       super(message)
       @node = node
