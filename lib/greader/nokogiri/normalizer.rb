@@ -24,13 +24,15 @@ module Nokogiri
       wrap_stray_text! html
 
       blocks(html).each do |blk|
-        blk.remove  if blank?(blk)  # Not recursive
-
         if block?(blk)
           add_class blk, 'image'  if image_paragraph?(blk)
           handle_duplicate_brs! blk
           fix_pseudo_headings! blk
         end
+      end
+
+      blocks(html).each do |blk|
+        blk.remove  if blank?(blk)  # Not recursive
       end
 
       html
@@ -41,6 +43,7 @@ module Nokogiri
     end
 
     def normalize_str(str)
+      str = "<p>#{str}</p>"
       normalize(Nokogiri.HTML(str)).xpath('//body').children.to_s
     end
 
