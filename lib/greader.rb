@@ -1,6 +1,6 @@
-require 'rest_client'
 require 'json'
-require 'nokogiri'
+require 'rest_client'  unless defined?(RestClient)
+require 'nokogiri'     unless defined?(Nokogiri)
 
 # Google Reader API client.
 #
@@ -65,6 +65,25 @@ module GReader
   def self.auth(options={})
     client = GReader::Client.new options
     client  if client.logged_in?
+  end
+
+  # Returns a list of HTML pre-processors.
+  # HTML snippets will be passed through this.
+  #
+  # @example
+  #   GReader.html_processors << lambda { |s| s.strip }
+  #   GReader.process_html('<p>  ')   #=> '<p>'
+  #
+  def self.html_processors
+    @html_processors ||= Array.new
+  end
+
+  # Processes an HTML snippet through the given HTML
+  # processors.
+  def self.process_html(str)
+    html = str.dup
+    html_processors.each { |proc| html = proc.call(html) }
+    html
   end
 
   def self.version
