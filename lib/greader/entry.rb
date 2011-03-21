@@ -60,7 +60,7 @@ module GReader
 
       @feed      = client.feed(options[:feed])
       @author    = options[:author]
-      @content   = options[:content]
+      @content   = Nokogiri::Normalize.normalize options[:content]
       @title     = options[:title]
       @published = options[:published]
       @updated   = options[:updated]

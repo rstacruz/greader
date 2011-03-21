@@ -1,6 +1,8 @@
-require 'rest_client'
 require 'json'
-require 'nokogiri'
+require 'rest_client'  unless defined?(RestClient)
+require 'nokogiri'     unless defined?(Nokogiri)
+
+require File.expand_path('../greader/nokogiri/normalizer', __FILE__)
 
 # Google Reader API client.
 #
