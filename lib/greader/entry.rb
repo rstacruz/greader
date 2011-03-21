@@ -131,6 +131,8 @@ module GReader
         :feed      => doc['origin']['streamId'],
         :id        => doc['id']
       }
+    rescue NoMethodError
+      raise ParseError.new("Malformed entries", doc)
     end
 
     # tags (<category>), read?, starred?, etc
