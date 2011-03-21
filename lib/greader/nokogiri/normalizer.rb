@@ -15,7 +15,10 @@ module Nokogiri
     INLINE = %w(a span strong em b i)
 
     BLACKLIST = [
-      /feedburner/
+      /feedburner/,
+      /^http:\/\/i\.creativecommons\.org/,
+      /http:\/\/api\.tweetmeme\.com/,
+      /adview\.php/
     ]
     
     # Normalizes HTML by cleaning out common mistakes.
@@ -90,6 +93,8 @@ module Nokogiri
     def handle_duplicate_brs!(html)
       html.css('br+br').each do |br|
         i = html.children.index(br)
+        next  if i.nil?
+
         pre, post = [ html.children[0..(i-2)], html.children[(i+1)..-1] ]
 
         tag = html.name
