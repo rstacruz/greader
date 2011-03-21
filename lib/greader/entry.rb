@@ -66,6 +66,8 @@ module GReader
       @updated   = options[:updated]
       @url       = options[:url]
       @id        = options[:id]
+      @read      = options[:read]
+      @starred   = options[:starred]
       @options = options
     end
 
@@ -120,6 +122,14 @@ module GReader
       ! image_url.nil?
     end
 
+    def read?
+      @read
+    end
+
+    def starred?
+      @starred
+    end
+
     # Converts a Noko XML node into a simpler Hash.
     def self.parse_json(doc)
       summary = (doc['content'] || doc['summary'])
@@ -132,7 +142,9 @@ module GReader
         :published => DateTime.new(doc['published']),
         :updated   => DateTime.new(doc['updated']),
         :feed      => doc['origin']['streamId'],
-        :id        => doc['id']
+        :id        => doc['id'],
+        :read      => doc['categories'].any? { |s| s =~ /com\.google\/fresh$/ }
+        :starred   => doc['categories'].any? { |s| s =~ /com\.google\/starred$/ }
         # Also available: comments [], annotations [], enclosure 
         # [{href,type,length}]
       }
@@ -140,7 +152,7 @@ module GReader
       raise ParseError.new("Malformed entries", doc)
     end
 
-    # tags (<category>), read?, starred?, etc
-    # read! unread!
+    # def read!
+    # def unread!
   end
 end
