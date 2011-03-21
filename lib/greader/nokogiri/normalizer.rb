@@ -13,6 +13,10 @@ module Nokogiri
 
     BLOCK  = %w(p h1 h2 h3 h4 h5 h6 dl dt dd)
     INLINE = %w(a span strong em b i)
+
+    BLACKLIST = [
+      /feedburner/
+    ]
     
     # Normalizes HTML by cleaning out common mistakes.
     def normalize(node)
@@ -20,6 +24,8 @@ module Nokogiri
 
       html = node.dup
 
+      remove_trackers! html
+      remove_blacklisted_images! html
       remove_style_attrs! html
       wrap_stray_text! html
 
@@ -53,6 +59,18 @@ module Nokogiri
 
     def add_class(html, cls)
       html['class'] = [html['class'], 'image'].compact.join(' ')
+    end
+
+    def remove_trackers!(html)
+      html.css("img[width='1'], img[height='1']").remove
+    end
+
+    def remove_blacklisted_images!(html)
+      html.css('img').each do |img|
+        BLACKLIST.any? do |spec|
+          (img.remove && true)  if img['src'].match(spec)
+        end
+      end
     end
 
     # @example
