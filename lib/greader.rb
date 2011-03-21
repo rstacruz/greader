@@ -91,5 +91,11 @@ module GReader
   end
 
   Error      = Class.new(StandardError)
-  ParseError = Class.new(Error)
+
+  class ParseError < Error
+    def initialize(message, node)
+      super(message)
+      @node = node
+    end
+  end
 end
