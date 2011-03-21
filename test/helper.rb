@@ -22,7 +22,7 @@ module TestHelpers
   end
 
   def fixture(*a)
-    File.open(fixture_file(*a)) { |f| f.read }
+    File.open(fixture_file(*a), 'r:utf-8') { |f| f.read }
   end
 
   def fixture?(*a)
@@ -41,6 +41,9 @@ module TestHelpers
     ENV['REAL'] && fixture('credentials.yml')
   end
 
+  # @example
+  #   fake :post, url, body: '...'
+  #
   def fake(*a)
     FakeWeb.register_uri(*a)  unless real?
   end
