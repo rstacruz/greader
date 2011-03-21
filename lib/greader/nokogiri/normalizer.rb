@@ -32,6 +32,7 @@ module Nokogiri
       remove_blacklisted_images! html
       remove_style_attrs! html
       wrap_stray_text! html
+      move_stray_images! html
 
       blocks(html).each do |blk|
         if block?(blk)
@@ -65,6 +66,23 @@ module Nokogiri
       html['class'] = [html['class'], 'image'].compact.join(' ')
     end
 
+    # Isolate images into their own paragraphs
+    def move_stray_images!(html)
+      move = lambda { |para, img|
+        if para.children.index(img) == 0
+          para.add_previous_sibling "<p class='image'>#{img}</p>"
+          img.remove
+        end
+      }
+
+      html.css('p>img:first-child').each do |img|
+        move[img.parent, img]
+      end
+      html.css('p>a:first-child>img').each do |img|
+        move[img.parent.parent, img.parent]
+      end
+    end
+
     def remove_trackers!(html)
       html.css("img[width='1'], img[height='1']").remove
     end
@@ -72,7 +90,7 @@ module Nokogiri
     def remove_blacklisted_images!(html)
       html.css('img').each do |img|
         BLACKLIST.any? do |spec|
-          (img.remove && true)  if img['src'].match(spec)
+          (img.remove && true)  if img['src'].to_s.match(spec)
         end
       end
     end
