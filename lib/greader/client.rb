@@ -95,7 +95,7 @@ module GReader
     end
 
     def feed(what=nil)
-      feeds && @feeds[what.to_s.gsub('/', '_')]
+      feeds && @feeds[slug(what)]
     end
 
     def tags
