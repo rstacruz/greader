@@ -1,8 +1,7 @@
-ENV['RESTCLIENT_LOG'] = 'stdout'  if ENV['REAL']
-
 $:.push File.expand_path('../../lib', __FILE__)
 
 begin
+  require "test/unit"
   require 'contest'
   require 'fakeweb'
   require 'yaml'
@@ -14,6 +13,7 @@ end
 
 require 'greader'
 
+RestClient.log = '/tmp/restclient.log'
 module TestHelpers
   extend self
 
@@ -33,7 +33,7 @@ module TestHelpers
     if real?
       YAML::load fixture('credentials.yml')
     else
-      { :email => 'christian@mcnamara-troy.com', :password => 'yoplait' }
+      { :email => 'rubygreadertest', :password => 'greader_200' }
     end
   end
 

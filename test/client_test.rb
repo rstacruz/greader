@@ -1,7 +1,7 @@
 require File.expand_path('../helper', __FILE__)
 
 class ClientTest < Test::Unit::TestCase
-  setup do
+  def setup
     @client = GReader.auth credentials
   end
 

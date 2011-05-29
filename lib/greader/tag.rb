@@ -31,7 +31,7 @@ module GReader
     # @return [Client]
     attr_reader :client
 
-    def initialize(client=Client.new, options)
+    def initialize(client, options)
       @client  = client
       @options = options
       @id      = options['id']

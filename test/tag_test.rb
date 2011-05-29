@@ -1,24 +1,24 @@
 require File.expand_path('../helper', __FILE__)
 
 class TagTest < Test::Unit::TestCase
-  setup do
+  def setup
     @client = GReader.auth credentials
     @tags   = @client.tags
-    @tag    = @tags[4]
+    @tag    = @tags[0]
   end
 
   test "Client#tags" do
-    assert_equal 24, @tags.size
+    assert_equal 7, @tags.size
   end
 
   test "Tag" do
-    assert_equal "Dev | Ruby", @tag.to_s
+    assert_equal "coding", @tag.to_s
   end
 
   test "Tag#feeds" do
     @feeds = @tag.feeds
 
-    control = ["pipe :to => /dev/null", "RubyInside.com", "The timeless repository", "Antirez.com"]
+    control = ["Martin Fowler", "Ruby5", "RubyFlow"]
     assert_equal control, @feeds.map(&:to_s)
   end
 
