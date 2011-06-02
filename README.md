@@ -12,3 +12,10 @@ Please read the {GReader} module documentation.
   
 [doc]: http://rubydoc.info/github/rstacruz/greader
 [api]: http://code.google.com/p/pyrfeed/wiki/GoogleReaderAPI
+
+### Authors
+
+Authored and maintained by Rico Sta. Cruz (github.com/rstacruz),
+with contributions from:
+
+ * Colin Gemmell (pythonandchips.net)
