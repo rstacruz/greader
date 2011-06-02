@@ -50,11 +50,11 @@ module GReader
 
     alias to_s title
 
-    def initialize(client=Client.new, options)
+    def initialize(client=Client.new, options={})
       @client  = client
       @options = options
       @title   = options['title']
-      @url     = options['htmlUrl']
+      @url     = options['id'].gsub("feed/","")
       @sortid  = options['sortid']
       @id      = options['id']
       @tags_   = options['categories']

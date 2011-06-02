@@ -61,10 +61,8 @@ module GReader
         'Email'    => options[:email],
         'Passwd'   => options[:password],
         'source'   => client_name
-
       m = /Auth=(.*)/i.match(response.to_s)
       @auth = m ? m[1] : nil
-
       true
     rescue RestClient::Forbidden
       false
@@ -87,7 +85,11 @@ module GReader
     def feeds
       @feeds ||= begin
         list = json_get('subscription/list')['subscriptions']
-        list.inject({}) { |h, item| feed = Feed.new self, item; h[feed.to_param] = feed; h }
+        list.inject({}) do |h, item| 
+          feed = Feed.new(self, item)
+          h[feed.to_param] = feed
+          h 
+        end
       end
       @feeds.values.sort
     end
@@ -115,7 +117,7 @@ module GReader
     def client_name() "greader.rb/#{GReader.version}"; end
 
     def get(url, options={})
-      request :get, url, params: options.merge('client' => client_name)
+      request :get, url, options.merge('client' => client_name)
     end
 
     def post(url, options={})
@@ -128,7 +130,6 @@ module GReader
 
     def request(meth, url, options={})
       url = API_URL + url
-
       if @auth
         auth_request meth, url, options
       elsif @oauth_token
@@ -145,8 +146,7 @@ module GReader
   protected
 
     def auth_request(meth, url, options={})
-      options['Authorization'] = "GoogleLogin auth=#{self.auth}"  if logged_in?
-      RestClient.send meth, API_URL + url, options
+      RestClient.send meth, url, :params => options, :Authorization => "GoogleLogin auth=#{@auth}"
     end
 
     def oauth_request(meth, url, options={})

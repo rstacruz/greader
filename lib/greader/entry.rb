@@ -55,7 +55,7 @@ module GReader
 
     # Constructor.
     # Can be called with an options hash or a Nokogiri XML node.
-    def initialize(client=Client.new, options)
+    def initialize(client=Client.new, options={})
       @client  = client
 
       @feed      = client.feed(options[:feed])
@@ -118,8 +118,8 @@ module GReader
         :author    => '(author unknown)',
         :content   => (doc['content'] || doc['summary'])['content'],
         :title     => doc['title'],
-        :published => Time.new(doc['published']),
-        :updated   => Time.new(doc['updated']),
+        :published => DateTime.new(doc['published']),
+        :updated   => DateTime.new(doc['updated']),
         :feed      => doc['origin']['streamId'],
         :id        => doc['id']
       }

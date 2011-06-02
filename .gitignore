@@ -5,3 +5,5 @@ extra
 .yardoc
 /test/fixtures/credentials.yml
 /pkg
+*.swp
+tags
