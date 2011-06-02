@@ -4,6 +4,7 @@ extra
 /doc
 .yardoc
 /test/fixtures/credentials.yml
-/pkg
+*.gem
 *.swp
 tags
+
