@@ -1,4 +1,4 @@
-require "./lib/greader"
+require "./lib/greader/version"
 Gem::Specification.new do |s|
   s.name = "greader"
   s.version = GReader.version.to_s

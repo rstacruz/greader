@@ -53,7 +53,6 @@ require 'nokogiri'     unless defined?(Nokogiri)
 #
 module GReader
   PREFIX  = File.expand_path('../greader/', __FILE__)
-  VERSION = "0.0.2"
 
   autoload :Client,    "#{PREFIX}/client"
   autoload :Entry,     "#{PREFIX}/entry"
@@ -61,6 +60,8 @@ module GReader
   autoload :Feed,      "#{PREFIX}/feed"
   autoload :Tag,       "#{PREFIX}/tag"
   autoload :Utilities, "#{PREFIX}/utilities"
+
+  require "#{PREFIX}/version"
 
   def self.auth(options={})
     client = GReader::Client.new options
@@ -86,11 +87,7 @@ module GReader
     html
   end
 
-  def self.version
-    VERSION
-  end
-
-  Error      = Class.new(StandardError)
+  Error = Class.new(StandardError)
 
   class ParseError < Error
     attr_reader :node
