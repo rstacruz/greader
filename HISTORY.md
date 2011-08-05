@@ -1,3 +1,9 @@
+v0.0.3 - Aug 06, 2011
+---------------------
+
+### Fixed:
+  * Move the version number to it's own Ruby file to make sure gem building produces no trouble. (#2)
+
 v0.0.2 - Jun 03, 2011
 ---------------------
 
