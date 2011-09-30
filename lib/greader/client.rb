@@ -73,7 +73,7 @@ module GReader
     end
 
     def token
-      @token ||= api_get 'token'
+      @token ||= get 'token'
     end
 
     # Expires the cache
