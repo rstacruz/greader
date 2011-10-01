@@ -7,4 +7,4 @@ extra
 *.gem
 *.swp
 tags
-
+.DS_Store
