@@ -48,6 +48,7 @@ module GReader
     def initialize(options={})
       authenticate options  if options[:password]
       @oauth_token = options[:access_token]  if options[:access_token]
+      @auth = options[:auth]  if options[:auth]
     end
 
     # Authenticates to the Google Reader service.
